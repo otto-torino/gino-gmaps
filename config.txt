@@ -1,0 +1,1 @@
+name:"gmaps",version:"1.0",type:"class",role1:"0",role2:"0",role3:"0",role_group:"1",tbl_name:"gmaps",instance:"yes",description:"Gestore di mappe interattive",removable:"yes",folders:"contents/gmaps"
