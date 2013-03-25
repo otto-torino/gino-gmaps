@@ -11,28 +11,6 @@
  */
 
 /**
- * @mainpage Caratteristiche opzioni ed output disponibili
- *
- * gino-gmaps è una classe istanziabile per la gestione di mappe di punti di interesse, percorsi ed aree. 
- * I punti di interesse sono corredati di informazioni aggiuntive, foto, video, allegati, eventi e collezioni.
- * I percorsi e le aree possono essere associati a punti di interesse.
- * Le mappe ottenute possono essere embeddate in iframe su qualunque altro sito. 
- *
- * OPZIONI
- * - Titolo modulo
- * - Mappa di default mostrata se non precisata da url
- * - Campi mostrati nella lista elementi della mappa
- *
- * OUTPUT DISPONIBILI
- * - vista mappa
- * - vista mappa con elenco items
- * - scheda punto di interesse
- * - scheda percorso
- * - scheda area
- *
- */
-
-/**
  * @defgroup gino-gmaps
  * @brief Modulo per la gestione di punti si interesse, percorsi ed aree geolocalizzati
  *

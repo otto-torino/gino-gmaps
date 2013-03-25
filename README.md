@@ -1,9 +1,8 @@
+gmaps library for gino CMS by Otto Srl, MIT license    {#mainpage}
 ===================================================================
-gmaps library for gino CMS by Otto Srl, MIT license
-===================================================================
-Release 1.0 - Requires gino 1.3.0
+Release 1.0.1 - Requires gino 1.3.0
 Libreria per la gestione di mappe (google maps) interattive.    
-La documentazione per lo sviluppatore della versione 1.0 (generata con doxygen) è contenuta all'interno della directory doc.    
+La documentazione per lo sviluppatore della versione 1.0.1 (generata con doxygen) è contenuta all'interno della directory doc.    
 La documentazione dell'ultima versione disponibile la si trova qui:    
 http://otto-torino.github.com/gino-gmaps
 
