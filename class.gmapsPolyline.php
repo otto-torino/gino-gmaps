@@ -3,7 +3,7 @@
  * @file class.gmapsPolyline.php
  * @brief Contiene la definizione ed implementazione della classe gmapsPolyline.
  *
- * @version 1.0
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -32,7 +32,7 @@
  * - **_points_id**: array di punti associati al percorso
  * - **_points**: array di id di punti associati al percorso
  *
- * @version 1.0
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -40,9 +40,10 @@
  */
 class gmapsPolyline extends propertyObject {
 
-       	public static $_tbl_polyline = "gmaps_polyline";
-       	public static $_tbl_polyline_point = "gmaps_polyline_point";
-       	public static $_tbl_polyline_polyline_ctg = "gmaps_polyline_polyline_ctg";
+  public static $_tbl_polyline = "gmaps_polyline";
+  public static $_tbl_polyline_point = "gmaps_polyline_point";
+  public static $_tbl_polyline_polyline_ctg = "gmaps_polyline_polyline_ctg";
+  public static $_tbl_map_polyline = "gmaps_map_polyline";
 
 	private $_controller;
 
@@ -126,6 +127,10 @@ class gmapsPolyline extends propertyObject {
 
 		// delete polyline ctg association
 		$query = "DELETE FROM ".self::$_tbl_polyline_polyline_ctg." WHERE polyline_id IN (SELECT id FROM ".self::$_tbl_polyline." WHERE instance='$instance')";
+		$res = $res && $db->actionquery($query);
+
+		// delete polyline map association
+		$query = "DELETE FROM ".self::$_tbl_map_polyline." WHERE polyline_id IN (SELECT id FROM ".self::$_tbl_polyline." WHERE instance='$instance')";
 		$res = $res && $db->actionquery($query);
 
 		// delete polylines
@@ -510,6 +515,10 @@ class gmapsPolyline extends propertyObject {
 		// delete ctg association
 		$query = "DELETE FROM ".self::$_tbl_polyline_polyline_ctg." WHERE polyline_id='".$this->id."'";
 		$res = $db->actionquery($query);
+
+		// delete map association
+		$query = "DELETE FROM ".self::$_tbl_map_polyline." WHERE polyline_id='".$this->id."'";
+		$res = $res && $db->actionquery($query);
 
 		// delete point association
 		$query = "DELETE FROM ".self::$_tbl_polyline_point." WHERE polyline_id='".$this->id."'";
