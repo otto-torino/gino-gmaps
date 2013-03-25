@@ -18,6 +18,5 @@ var searchData=
   ['class_2egmapsvideo_2ephp',['class.gmapsVideo.php',['../class_8gmaps_video_8php.html',1,'']]],
   ['class_5fgmaps_2ephp',['class_gmaps.php',['../class__gmaps_8php.html',1,'']]],
   ['collections',['collections',['../classgmaps_point.html#a9a6c80365bb0ebeeebe0c4060da07c30',1,'gmapsPoint']]],
-  ['ctgs',['ctgs',['../classgmaps_point.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPoint\ctgs()'],['../classgmaps_polygon.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPolygon\ctgs()'],['../classgmaps_polyline.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPolyline\ctgs()']]],
-  ['caratteristiche_20opzioni_20ed_20output_20disponibili',['Caratteristiche opzioni ed output disponibili',['../index.html',1,'']]]
+  ['ctgs',['ctgs',['../classgmaps_point.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPoint\ctgs()'],['../classgmaps_polygon.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPolygon\ctgs()'],['../classgmaps_polyline.html#aefc5ff679a58a8d4e0b93a4ca53b44ac',1,'gmapsPolyline\ctgs()']]]
 ];

@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -24,9 +31,9 @@
   <td id="projectlogo"><img alt="Logo" src="logotto_100px.jpg"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Gino Gmaps
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
-   <div id="projectbrief">Modulo di gestione di mappe interative per Gino CMS</div>
+   <div id="projectbrief">Modulo di gestione di mappe interattive per Gino CMS</div>
   </td>
  </tr>
  </tbody>
@@ -40,7 +47,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
-      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
       <li><a href="modules.html"><span>Moduli</span></a></li>
       <li class="current"><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
       <li><a href="files.html"><span>File</span></a></li>
@@ -70,6 +76,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
       <li><a href="functions.html"><span>Campi&#160;dei&#160;dati</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('classgmaps_image.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,7 +105,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Membri pubblici</a> &#124;
@@ -561,14 +581,18 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </div>
 </div>
 <hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
-<li><a class="el" href="class_8gmaps_image_8php_source.html">class.gmapsImage.php</a></li>
+<li>/home/abidibo/Work/otto/gino-modules/gino-gmaps.git/<a class="el" href="class_8gmaps_image_8php_source.html">class.gmapsImage.php</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generato Ven 1 Mar 2013 12:10:02 per Gino Gmaps da &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classgmaps_image.html">gmapsImage</a></li>
+    <li class="footer">Generato Lun 25 Mar 2013 14:36:53 per Gino Gmaps da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>

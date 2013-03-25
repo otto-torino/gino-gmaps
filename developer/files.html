@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -24,9 +31,9 @@
   <td id="projectlogo"><img alt="Logo" src="logotto_100px.jpg"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Gino Gmaps
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
-   <div id="projectbrief">Modulo di gestione di mappe interative per Gino CMS</div>
+   <div id="projectbrief">Modulo di gestione di mappe interattive per Gino CMS</div>
   </td>
  </tr>
  </tbody>
@@ -40,7 +47,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
-      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
       <li><a href="modules.html"><span>Moduli</span></a></li>
       <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
       <li class="current"><a href="files.html"><span>File</span></a></li>
@@ -68,6 +74,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('files.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -88,32 +108,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 </div><!--header-->
 <div class="contents">
 <div class="textblock">Questo è un elenco di tutti i file con una loro breve descrizione:</div><div class="directory">
-<table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_attachment_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_attachment_8php.html" target="_self">class.gmapsAttachment.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_attachment.html" title="Classe per la gestione di allegati associati ai punti di interesse.">gmapsAttachment</a></td></tr>
-<tr id="row_1_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_collection_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_collection_8php.html" target="_self">class.gmapsCollection.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_collection.html" title="Classe per la gestione di collezioni associate ai punti di interesse.">gmapsCollection</a></td></tr>
-<tr id="row_2_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_collection_image_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_collection_image_8php.html" target="_self">class.gmapsCollectionImage.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_collection_image.html" title="Classe per la gestione di immagini associate alle collezioni.">gmapsCollectionImage</a></td></tr>
-<tr id="row_3_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_ctg_8php.html" target="_self">class.gmapsCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_ctg.html" title="Superclasse astratta per la gestione di categorie di punti di interesse e percorsi geolocalizzati...">gmapsCtg</a></td></tr>
-<tr id="row_4_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_event_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_event_8php.html" target="_self">class.gmapsEvent.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_event.html" title="Classe per la gestione di eventi associati ai punti di interesse.">gmapsEvent</a></td></tr>
-<tr id="row_5_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_image_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_image_8php.html" target="_self">class.gmapsImage.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_image.html" title="Classe per la gestione di immagini associate ai punti di interesse.">gmapsImage</a></td></tr>
-<tr id="row_6_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_map_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_map_8php.html" target="_self">class.gmapsMap.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_map.html" title="Classe per la gestione di mappe.">gmapsMap</a></td></tr>
-<tr id="row_7_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_marker_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_marker_8php.html" target="_self">class.gmapsMarker.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_marker.html" title="Classe per la gestione dei markers.">gmapsMarker</a></td></tr>
-<tr id="row_8_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_point_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_point_8php.html" target="_self">class.gmapsPoint.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_point.html" title="Classe per la gestione di punti di interesse geolocalizzati.">gmapsPoint</a></td></tr>
-<tr id="row_9_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_point_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_point_ctg_8php.html" target="_self">class.gmapsPointCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_point_ctg.html" title="Classe per la gestione di categorie di punti di interesse geolocalizzati.">gmapsPointCtg</a></td></tr>
-<tr id="row_10_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polygon_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polygon_8php.html" target="_self">class.gmapsPolygon.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polygon.html" title="Classe per la gestione di aree geolocalizzate.">gmapsPolygon</a></td></tr>
-<tr id="row_11_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polygon_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polygon_ctg_8php.html" target="_self">class.gmapsPolygonCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polygon_ctg.html" title="Classe per la gestione di categorie di aree geolocalizzate.">gmapsPolygonCtg</a></td></tr>
-<tr id="row_12_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polyline_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polyline_8php.html" target="_self">class.gmapsPolyline.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polyline.html" title="Classe per la gestione di percorsi geolocalizzati.">gmapsPolyline</a></td></tr>
-<tr id="row_13_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polyline_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polyline_ctg_8php.html" target="_self">class.gmapsPolylineCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polyline_ctg.html" title="Classe per la gestione di categorie di percorsi geolocalizzati.">gmapsPolylineCtg</a></td></tr>
-<tr id="row_14_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_service_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_service_8php.html" target="_self">class.gmapsService.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_service.html" title="Classe per la gestione dei servizi.">gmapsService</a></td></tr>
-<tr id="row_15_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_video_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_video_8php.html" target="_self">class.gmapsVideo.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_video.html" title="Classe per la gestione di video associati ai punti di interesse (link a youtube)">gmapsVideo</a></td></tr>
-<tr id="row_16_" class="even"><td class="entry"><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><a href="class__gmaps_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class__gmaps_8php.html" target="_self">class_gmaps.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps.html">gmaps</a></td></tr>
+<div class="levels">[livello di dettaglio <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span>]</div><table class="directory">
+<tr id="row_0_" class="even"><td class="entry"><img id="arr_0_" src="ftv2mlastnode.png" alt="\" width="16" height="22" onclick="toggleFolder('0_')"/><img id="img_0_" src="ftv2folderopen.png" alt="-" width="24" height="22" onclick="toggleFolder('0_')"/><a class="el" href="dir_b0c1f363edb6838f40247dd46912ce45.html" target="_self">gino-gmaps.git</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_attachment_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_attachment_8php.html" target="_self">class.gmapsAttachment.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_attachment.html" title="Classe per la gestione di allegati associati ai punti di interesse.">gmapsAttachment</a></td></tr>
+<tr id="row_0_1_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_collection_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_collection_8php.html" target="_self">class.gmapsCollection.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_collection.html" title="Classe per la gestione di collezioni associate ai punti di interesse.">gmapsCollection</a></td></tr>
+<tr id="row_0_2_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_collection_image_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_collection_image_8php.html" target="_self">class.gmapsCollectionImage.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_collection_image.html" title="Classe per la gestione di immagini associate alle collezioni.">gmapsCollectionImage</a></td></tr>
+<tr id="row_0_3_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_ctg_8php.html" target="_self">class.gmapsCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_ctg.html" title="Superclasse astratta per la gestione di categorie di punti di interesse e percorsi geolocalizzati...">gmapsCtg</a></td></tr>
+<tr id="row_0_4_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_event_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_event_8php.html" target="_self">class.gmapsEvent.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_event.html" title="Classe per la gestione di eventi associati ai punti di interesse.">gmapsEvent</a></td></tr>
+<tr id="row_0_5_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_image_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_image_8php.html" target="_self">class.gmapsImage.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_image.html" title="Classe per la gestione di immagini associate ai punti di interesse.">gmapsImage</a></td></tr>
+<tr id="row_0_6_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_map_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_map_8php.html" target="_self">class.gmapsMap.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_map.html" title="Classe per la gestione di mappe.">gmapsMap</a></td></tr>
+<tr id="row_0_7_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_marker_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_marker_8php.html" target="_self">class.gmapsMarker.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_marker.html" title="Classe per la gestione dei markers.">gmapsMarker</a></td></tr>
+<tr id="row_0_8_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_point_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_point_8php.html" target="_self">class.gmapsPoint.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_point.html" title="Classe per la gestione di punti di interesse geolocalizzati.">gmapsPoint</a></td></tr>
+<tr id="row_0_9_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_point_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_point_ctg_8php.html" target="_self">class.gmapsPointCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_point_ctg.html" title="Classe per la gestione di categorie di punti di interesse geolocalizzati.">gmapsPointCtg</a></td></tr>
+<tr id="row_0_10_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polygon_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polygon_8php.html" target="_self">class.gmapsPolygon.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polygon.html" title="Classe per la gestione di aree geolocalizzate.">gmapsPolygon</a></td></tr>
+<tr id="row_0_11_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polygon_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polygon_ctg_8php.html" target="_self">class.gmapsPolygonCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polygon_ctg.html" title="Classe per la gestione di categorie di aree geolocalizzate.">gmapsPolygonCtg</a></td></tr>
+<tr id="row_0_12_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polyline_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polyline_8php.html" target="_self">class.gmapsPolyline.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polyline.html" title="Classe per la gestione di percorsi geolocalizzati.">gmapsPolyline</a></td></tr>
+<tr id="row_0_13_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_polyline_ctg_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_polyline_ctg_8php.html" target="_self">class.gmapsPolylineCtg.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_polyline_ctg.html" title="Classe per la gestione di categorie di percorsi geolocalizzati.">gmapsPolylineCtg</a></td></tr>
+<tr id="row_0_14_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_service_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_service_8php.html" target="_self">class.gmapsService.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_service.html" title="Classe per la gestione dei servizi.">gmapsService</a></td></tr>
+<tr id="row_0_15_" class="even"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="class_8gmaps_video_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class_8gmaps_video_8php.html" target="_self">class.gmapsVideo.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps_video.html" title="Classe per la gestione di video associati ai punti di interesse (link a youtube)">gmapsVideo</a></td></tr>
+<tr id="row_0_16_"><td class="entry"><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><a href="class__gmaps_8php_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="class__gmaps_8php.html" target="_self">class_gmaps.php</a></td><td class="desc">Contiene la definizione ed implementazione della classe <a class="el" href="classgmaps.html">gmaps</a></td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generato Ven 1 Mar 2013 12:10:03 per Gino Gmaps da &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generato Lun 25 Mar 2013 14:36:54 per Gino Gmaps da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>

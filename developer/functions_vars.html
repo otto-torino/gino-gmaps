@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -24,9 +31,9 @@
   <td id="projectlogo"><img alt="Logo" src="logotto_100px.jpg"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Gino Gmaps
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
-   <div id="projectbrief">Modulo di gestione di mappe interative per Gino CMS</div>
+   <div id="projectbrief">Modulo di gestione di mappe interattive per Gino CMS</div>
   </td>
  </tr>
  </tbody>
@@ -40,7 +47,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
-      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
       <li><a href="modules.html"><span>Moduli</span></a></li>
       <li class="current"><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
       <li><a href="files.html"><span>File</span></a></li>
@@ -83,6 +89,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('functions_vars.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -295,19 +315,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 , <a class="el" href="classgmaps_image.html#aea4f3c3c4e434fd2d3cd2997d77ff7a1">gmapsImage</a>
 </li>
 <li>$_tbl_map
-: <a class="el" href="classgmaps.html#a8cc92ab35e80bb78b7dff5bfc5d6d32e">gmaps</a>
-, <a class="el" href="classgmaps_map.html#a8cc92ab35e80bb78b7dff5bfc5d6d32e">gmapsMap</a>
+: <a class="el" href="classgmaps_map.html#a8cc92ab35e80bb78b7dff5bfc5d6d32e">gmapsMap</a>
+, <a class="el" href="classgmaps.html#a8cc92ab35e80bb78b7dff5bfc5d6d32e">gmaps</a>
 </li>
 <li>$_tbl_map_point
-: <a class="el" href="classgmaps.html#a77ee02f93477d5ebcc360a53b57dd813">gmaps</a>
+: <a class="el" href="classgmaps_point.html#a77ee02f93477d5ebcc360a53b57dd813">gmapsPoint</a>
 , <a class="el" href="classgmaps_map.html#a77ee02f93477d5ebcc360a53b57dd813">gmapsMap</a>
+, <a class="el" href="classgmaps.html#a77ee02f93477d5ebcc360a53b57dd813">gmaps</a>
 </li>
 <li>$_tbl_map_polygon
-: <a class="el" href="classgmaps_map.html#a0716beb63ddab509642d2f76fc78ba70">gmapsMap</a>
-, <a class="el" href="classgmaps.html#a0716beb63ddab509642d2f76fc78ba70">gmaps</a>
+: <a class="el" href="classgmaps.html#a0716beb63ddab509642d2f76fc78ba70">gmaps</a>
+, <a class="el" href="classgmaps_map.html#a0716beb63ddab509642d2f76fc78ba70">gmapsMap</a>
+, <a class="el" href="classgmaps_polygon.html#a0716beb63ddab509642d2f76fc78ba70">gmapsPolygon</a>
 </li>
 <li>$_tbl_map_polyline
-: <a class="el" href="classgmaps.html#a7ea75e6e9aa8999a4b2ed6fa5b65ac4b">gmaps</a>
+: <a class="el" href="classgmaps_polyline.html#a7ea75e6e9aa8999a4b2ed6fa5b65ac4b">gmapsPolyline</a>
+, <a class="el" href="classgmaps.html#a7ea75e6e9aa8999a4b2ed6fa5b65ac4b">gmaps</a>
 , <a class="el" href="classgmaps_map.html#a7ea75e6e9aa8999a4b2ed6fa5b65ac4b">gmapsMap</a>
 </li>
 <li>$_tbl_marker
@@ -321,8 +344,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 , <a class="el" href="classgmaps.html#a75e0b7c7855d049605b23d6ad27b8f7f">gmaps</a>
 </li>
 <li>$_tbl_point_attachment
-: <a class="el" href="classgmaps.html#a543bcb59cf6c57d87ed8012a98d9731d">gmaps</a>
-, <a class="el" href="classgmaps_point.html#a543bcb59cf6c57d87ed8012a98d9731d">gmapsPoint</a>
+: <a class="el" href="classgmaps_point.html#a543bcb59cf6c57d87ed8012a98d9731d">gmapsPoint</a>
+, <a class="el" href="classgmaps.html#a543bcb59cf6c57d87ed8012a98d9731d">gmaps</a>
 </li>
 <li>$_tbl_point_collection
 : <a class="el" href="classgmaps_point.html#ab2142bd5f78bea4672765f95a37df32d">gmapsPoint</a>
@@ -342,8 +365,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 , <a class="el" href="classgmaps_point.html#a23bc05aa8cc5853f156d9a5479cf357a">gmapsPoint</a>
 </li>
 <li>$_tbl_point_point_ctg
-: <a class="el" href="classgmaps.html#af030c7e5539e33e2472b87d79004e24f">gmaps</a>
-, <a class="el" href="classgmaps_point.html#af030c7e5539e33e2472b87d79004e24f">gmapsPoint</a>
+: <a class="el" href="classgmaps_point.html#af030c7e5539e33e2472b87d79004e24f">gmapsPoint</a>
+, <a class="el" href="classgmaps.html#af030c7e5539e33e2472b87d79004e24f">gmaps</a>
 </li>
 <li>$_tbl_point_service
 : <a class="el" href="classgmaps.html#a9250474cf4ca3f38807d646c96d48476">gmaps</a>
@@ -354,23 +377,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 , <a class="el" href="classgmaps.html#a57c91348b29af178db12bd8d96b8c8d9">gmaps</a>
 </li>
 <li>$_tbl_polygon
-: <a class="el" href="classgmaps.html#aaf04e5a23bb21fbb65ee1f67e6574670">gmaps</a>
-, <a class="el" href="classgmaps_polygon.html#aaf04e5a23bb21fbb65ee1f67e6574670">gmapsPolygon</a>
+: <a class="el" href="classgmaps_polygon.html#aaf04e5a23bb21fbb65ee1f67e6574670">gmapsPolygon</a>
+, <a class="el" href="classgmaps.html#aaf04e5a23bb21fbb65ee1f67e6574670">gmaps</a>
 </li>
 <li>$_tbl_polygon_ctg
 : <a class="el" href="classgmaps.html#aa4eb48d8512194343243815a0f4a3cc1">gmaps</a>
 </li>
 <li>$_tbl_polygon_point
-: <a class="el" href="classgmaps_polygon.html#ae769c94bbfd82b58b94993289d88195f">gmapsPolygon</a>
-, <a class="el" href="classgmaps.html#ae769c94bbfd82b58b94993289d88195f">gmaps</a>
+: <a class="el" href="classgmaps.html#ae769c94bbfd82b58b94993289d88195f">gmaps</a>
+, <a class="el" href="classgmaps_polygon.html#ae769c94bbfd82b58b94993289d88195f">gmapsPolygon</a>
 </li>
 <li>$_tbl_polygon_polygon_ctg
 : <a class="el" href="classgmaps.html#a419986d515f911106ba41c680f516650">gmaps</a>
 , <a class="el" href="classgmaps_polygon.html#a419986d515f911106ba41c680f516650">gmapsPolygon</a>
 </li>
 <li>$_tbl_polyline
-: <a class="el" href="classgmaps.html#aaff5ddf89ba9973bc45f4d47f585427a">gmaps</a>
-, <a class="el" href="classgmaps_polyline.html#aaff5ddf89ba9973bc45f4d47f585427a">gmapsPolyline</a>
+: <a class="el" href="classgmaps_polyline.html#aaff5ddf89ba9973bc45f4d47f585427a">gmapsPolyline</a>
+, <a class="el" href="classgmaps.html#aaff5ddf89ba9973bc45f4d47f585427a">gmaps</a>
 </li>
 <li>$_tbl_polyline_ctg
 : <a class="el" href="classgmaps.html#a2f1c4ebd4605d808f9731d075475b9a6">gmaps</a>
@@ -394,11 +417,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 </li>
 <li>$_thumb_width
 : <a class="el" href="classgmaps_collection.html#a80c3f4bbc8e34258653c771337f5a427">gmapsCollection</a>
-, <a class="el" href="classgmaps_collection_image.html#a80c3f4bbc8e34258653c771337f5a427">gmapsCollectionImage</a>
 , <a class="el" href="classgmaps_service.html#a80c3f4bbc8e34258653c771337f5a427">gmapsService</a>
-, <a class="el" href="classgmaps_ctg.html#a80c3f4bbc8e34258653c771337f5a427">gmapsCtg</a>
-, <a class="el" href="classgmaps_event.html#a80c3f4bbc8e34258653c771337f5a427">gmapsEvent</a>
+, <a class="el" href="classgmaps_collection_image.html#a80c3f4bbc8e34258653c771337f5a427">gmapsCollectionImage</a>
 , <a class="el" href="classgmaps_image.html#a80c3f4bbc8e34258653c771337f5a427">gmapsImage</a>
+, <a class="el" href="classgmaps_event.html#a80c3f4bbc8e34258653c771337f5a427">gmapsEvent</a>
+, <a class="el" href="classgmaps_ctg.html#a80c3f4bbc8e34258653c771337f5a427">gmapsCtg</a>
 </li>
 <li>$_title
 : <a class="el" href="classgmaps.html#a49d523a090a700a0689f154d79932063">gmaps</a>
@@ -408,11 +431,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generato Ven 1 Mar 2013 12:10:03 per Gino Gmaps da &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generato Lun 25 Mar 2013 14:36:54 per Gino Gmaps da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>

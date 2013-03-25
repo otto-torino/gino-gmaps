@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['readme',['README',['../md__r_e_a_d_m_e.html',1,'']]],
   ['readme_2emd',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]],
   ['removepoints',['removePoints',['../classgmaps_map.html#adf0fde39c32b59b60f2b5bd38218bcba',1,'gmapsMap\removePoints()'],['../classgmaps_polygon.html#adf0fde39c32b59b60f2b5bd38218bcba',1,'gmapsPolygon\removePoints()'],['../classgmaps_polyline.html#adf0fde39c32b59b60f2b5bd38218bcba',1,'gmapsPolyline\removePoints()']]],
   ['removepolygons',['removePolygons',['../classgmaps_map.html#a26ff133eec0891adb357e653b2d6c95b',1,'gmapsMap']]],

@@ -24,5 +24,6 @@ var searchData=
   ['gmapspolyline',['gmapsPolyline',['../classgmaps_polyline.html',1,'']]],
   ['gmapspolylinectg',['gmapsPolylineCtg',['../classgmaps_polyline_ctg.html',1,'']]],
   ['gmapsservice',['gmapsService',['../classgmaps_service.html',1,'']]],
-  ['gmapsvideo',['gmapsVideo',['../classgmaps_video.html',1,'']]]
+  ['gmapsvideo',['gmapsVideo',['../classgmaps_video.html',1,'']]],
+  ['gmaps_20library_20for_20gino_20cms_20by_20otto_20srl_2c_20mit_20license',['gmaps library for gino CMS by Otto Srl, MIT license',['../index.html',1,'']]]
 ];

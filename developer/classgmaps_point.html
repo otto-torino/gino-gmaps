@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -24,9 +31,9 @@
   <td id="projectlogo"><img alt="Logo" src="logotto_100px.jpg"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Gino Gmaps
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
-   <div id="projectbrief">Modulo di gestione di mappe interative per Gino CMS</div>
+   <div id="projectbrief">Modulo di gestione di mappe interattive per Gino CMS</div>
   </td>
  </tr>
  </tbody>
@@ -40,7 +47,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
-      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
       <li><a href="modules.html"><span>Moduli</span></a></li>
       <li class="current"><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
       <li><a href="files.html"><span>File</span></a></li>
@@ -70,6 +76,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
       <li><a href="functions.html"><span>Campi&#160;dei&#160;dati</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('classgmaps_point.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,7 +105,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Membri pubblici</a> &#124;
@@ -234,6 +254,8 @@ Attributi privati statici</h2></td></tr>
 <tr class="separator:a9250474cf4ca3f38807d646c96d48476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af030c7e5539e33e2472b87d79004e24f"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmaps_point.html#af030c7e5539e33e2472b87d79004e24f">$_tbl_point_point_ctg</a> = &quot;gmaps_point_point_ctg&quot;</td></tr>
 <tr class="separator:af030c7e5539e33e2472b87d79004e24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77ee02f93477d5ebcc360a53b57dd813"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmaps_point.html#a77ee02f93477d5ebcc360a53b57dd813">$_tbl_map_point</a> = 'gmaps_map_point'</td></tr>
+<tr class="separator:a77ee02f93477d5ebcc360a53b57dd813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
 <div class="textblock"><p>Classe per la gestione di punti di interesse geolocalizzati. </p>
@@ -273,7 +295,7 @@ Attributi privati statici</h2></td></tr>
 <li>**_attachments**: array di allegati associati al punto di interesse</li>
 <li>**_collections**: array di collezioni associate al punto di interesse</li>
 </ul>
-<p>.0  2012 Otto srl MIT License <a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a> </p>
+<dl class="section version"><dt>Versione</dt><dd>1.0.1  2012 Otto srl MIT License <a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a> </dd></dl>
 <dl class="section author"><dt>Autori</dt><dd>Marco Guidotti <a href="#" onclick="location.href='mai'+'lto:'+'gui'+'do'+'tti'+'m@'+'gma'+'il'+'.co'+'m'; return false;">guido<span style="display: none;">.nosp@m.</span>ttim<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a> </dd>
 <dd>
 abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'ail'+'.c'+'om'; return false;">abidi<span style="display: none;">.nosp@m.</span>bo@g<span style="display: none;">.nosp@m.</span>mail.<span style="display: none;">.nosp@m.</span>com</a> </dd></dl>
@@ -314,7 +336,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd><a class="el" href="classgmaps_point.html" title="Classe per la gestione di punti di interesse geolocalizzati.">gmapsPoint</a> un oggetto <a class="el" href="classgmaps_point.html" title="Classe per la gestione di punti di interesse geolocalizzati.">gmapsPoint</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00116">116</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00117">117</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -336,7 +358,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_attachment.html">gmapsAttachment</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00316">316</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00321">321</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -357,7 +379,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_collection.html">gmapsCollection</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00328">328</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00333">333</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -378,7 +400,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_point_ctg.html">gmapsPointCtg</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00256">256</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00261">261</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -399,7 +421,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>bool il risultato dell'operazione </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00732">732</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00737">737</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -434,7 +456,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>bool The result of the deletion </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00214">214</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00215">215</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -455,7 +477,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_event.html">gmapsEvent</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00304">304</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00309">309</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -482,7 +504,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>string form di inserimento e modifica dati punto di interesse </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00447">447</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00452">452</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -511,7 +533,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>private </p>
 <dl class="section return"><dt>Restituisce</dt><dd>string widget </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00552">552</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00557">557</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -562,7 +584,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>array un array di id dei punti di interesse ottenuti dalla query </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00347">347</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00352">352</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -597,7 +619,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>array un array di id dei punti di interesse associati alla categoria </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00425">425</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00430">430</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -632,7 +654,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>array un array di id dei punti di interesse associati al marker dato </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00378">378</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00383">383</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -667,7 +689,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>array un array di id dei punti di interesse associati al servizio dato </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00402">402</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00407">407</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -705,7 +727,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>string codice javascript che disegna il marker </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00601">601</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00606">606</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -726,7 +748,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_image.html">gmapsImage</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00280">280</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00285">285</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -778,7 +800,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>string oggetto javascript </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00630">630</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00635">635</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -813,7 +835,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>bool il risultato dell'operazione </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00684">684</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00689">689</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -848,7 +870,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>bool il risultato dell'operazione </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00708">708</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00713">713</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -869,7 +891,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_service.html">gmapsService</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00268">268</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00273">273</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -896,7 +918,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>bool true </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00198">198</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00199">199</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -917,7 +939,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 <p>public </p>
 <dl class="section return"><dt>Restituisce</dt><dd>array array di oggetti <a class="el" href="classgmaps_video.html">gmapsVideo</a> </dd></dl>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00292">292</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00297">297</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -942,7 +964,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di allegati (<a class="el" href="classgmaps_attachment.html">gmapsAttachment</a>) associati al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00101">101</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00102">102</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -966,7 +988,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di collezioni (<a class="el" href="classgmaps_collection.html">gmapsCollection</a>) associate al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00106">106</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00107">107</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1010,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 </table>
 </div><div class="memdoc">
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00071">71</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00072">72</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1034,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di categorie (<a class="el" href="classgmaps_point_ctg.html">gmapsPointCtg</a>) associate al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00076">76</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00077">77</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1026,7 +1048,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
       </table>
 </div><div class="memdoc">
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00076">76</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00077">77</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1050,7 +1072,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di eventi (<a class="el" href="classgmaps_event.html">gmapsEvent</a>) associati al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00096">96</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00097">97</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1074,7 +1096,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di immagini (<a class="el" href="classgmaps_image.html">gmapsImage</a>) associate al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00086">86</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00087">87</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1120,7 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di servizi (gmaspService) associati al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00081">81</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00082">82</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1112,7 +1134,29 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
       </table>
 </div><div class="memdoc">
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00081">81</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00082">82</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a77ee02f93477d5ebcc360a53b57dd813"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">$_tbl_map_point = 'gmaps_map_point'</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00070">70</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
@@ -1334,19 +1378,23 @@ abidibo <a href="#" onclick="location.href='mai'+'lto:'+'abi'+'di'+'bo@'+'gm'+'a
 
 <p>Array di video (<a class="el" href="classgmaps_video.html">gmapsVideo</a>) associati al punto di interesse. </p>
 
-<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00091">91</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
+<p>Definizione alla linea <a class="el" href="class_8gmaps_point_8php_source.html#l00092">92</a> del file <a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a>.</p>
 
 </div>
 </div>
 <hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
-<li><a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a></li>
+<li>/home/abidibo/Work/otto/gino-modules/gino-gmaps.git/<a class="el" href="class_8gmaps_point_8php_source.html">class.gmapsPoint.php</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generato Ven 1 Mar 2013 12:10:02 per Gino Gmaps da &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classgmaps_point.html">gmapsPoint</a></li>
+    <li class="footer">Generato Lun 25 Mar 2013 14:36:53 per Gino Gmaps da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>
