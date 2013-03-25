@@ -3,7 +3,7 @@
  * @file class.gmapsPoint.php
  * @brief Contiene la definizione ed implementazione della classe gmapsPoint.
  *
- * @version1.0.1
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -50,7 +50,7 @@
  * - **_attachments**: array di allegati associati al punto di interesse
  * - **_collections**: array di collezioni associate al punto di interesse
  *
- * @version1.0.1
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -58,16 +58,16 @@
  */
 class gmapsPoint extends propertyObject {
 
-       	private static $_tbl_point = "gmaps_point";
-       	private static $_tbl_point_image = "gmaps_point_image";
-       	private static $_tbl_point_video = "gmaps_point_video";
-       	private static $_tbl_point_event = "gmaps_point_event";
-       	private static $_tbl_point_attachment = "gmaps_point_attachment";
-       	private static $_tbl_point_collection = "gmaps_point_collection";
-       	private static $_tbl_point_collection_image = "gmaps_point_collection_image";
-       	private static $_tbl_point_service = "gmaps_point_service";
-       	private static $_tbl_point_point_ctg = "gmaps_point_point_ctg";
-        private static $_tbl_map_point = 'gmaps_map_point';
+  private static $_tbl_point = "gmaps_point";
+  private static $_tbl_point_image = "gmaps_point_image";
+  private static $_tbl_point_video = "gmaps_point_video";
+  private static $_tbl_point_event = "gmaps_point_event";
+  private static $_tbl_point_attachment = "gmaps_point_attachment";
+  private static $_tbl_point_collection = "gmaps_point_collection";
+  private static $_tbl_point_collection_image = "gmaps_point_collection_image";
+  private static $_tbl_point_service = "gmaps_point_service";
+  private static $_tbl_point_point_ctg = "gmaps_point_point_ctg";
+  private static $_tbl_map_point = 'gmaps_map_point';
 
 	private $_controller;
 
