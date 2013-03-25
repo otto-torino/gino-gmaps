@@ -3,7 +3,7 @@
  * @file class.gmapsPolygon.php
  * @brief Contiene la definizione ed implementazione della classe gmapsPolygon.
  *
- * @version 1.0
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -32,7 +32,7 @@
  * - **_points_id**: array di punti associati all'area
  * - **_points**: array di id di punti associati all'area
  *
- * @version 1.0
+ * @version 1.0.1
  * @copiright 2012 Otto srl MIT License http://www.opensource.org/licenses/mit-license.php
  * @authors Marco Guidotti guidottim@gmail.com
  * @authors abidibo abidibo@gmail.com
@@ -40,9 +40,10 @@
  */
 class gmapsPolygon extends propertyObject {
 
-   	public static $_tbl_polygon = "gmaps_polygon";
-   	public static $_tbl_polygon_point = "gmaps_polygon_point";
+  public static $_tbl_polygon = "gmaps_polygon";
+  public static $_tbl_polygon_point = "gmaps_polygon_point";
  	public static $_tbl_polygon_polygon_ctg = "gmaps_polygon_polygon_ctg";
+ 	public static $_tbl_map_polygon = "gmaps_map_polygon";
 
 	private $_controller;
 
@@ -126,6 +127,10 @@ class gmapsPolygon extends propertyObject {
 
 		// delete polygon ctg association
 		$query = "DELETE FROM ".self::$_tbl_polygon_polygon_ctg." WHERE polygon_id IN (SELECT id FROM ".self::$_tbl_polygon." WHERE instance='$instance')";
+		$res = $res && $db->actionquery($query);
+
+		// delete polygon map association
+		$query = "DELETE FROM ".self::$_tbl_map_polygon." WHERE polygon_id IN (SELECT id FROM ".self::$_tbl_polygon." WHERE instance='$instance')";
 		$res = $res && $db->actionquery($query);
 
 		// delete polygons
@@ -510,6 +515,10 @@ class gmapsPolygon extends propertyObject {
 		// delete ctg association
 		$query = "DELETE FROM ".self::$_tbl_polygon_polygon_ctg." WHERE polygon_id='".$this->id."'";
 		$res = $db->actionquery($query);
+
+		// delete map association
+		$query = "DELETE FROM ".self::$_tbl_map_polygon." WHERE polygon_id='".$this->id."'";
+		$res = $res && $db->actionquery($query);
 
 		// delete point association
 		$query = "DELETE FROM ".self::$_tbl_polygon_point." WHERE polygon_id='".$this->id."'";
