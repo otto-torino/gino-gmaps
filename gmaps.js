@@ -1,795 +1,819 @@
-GmapPoint = new Class({
-
-	Implements: [Options],
-	initialize: function(fields, categories, polylines, polygons, map, info_url) {
-		// db fields
-		this.fields = fields;
-		// map
-		this.map = map;
-		// visibility
-		this.visible = false;
-		// google map marker
-		this.marker = null;
-		// infowindow
-		this.infowindow = null;
-		// categories
-		this.categories = categories;
-		// polylines
-		this.polylines = polylines;
-		// polygons
-		this.polygons = polygons;
-		// latlng google maps object
-		this.latlng = new google.maps.LatLng(this.fields.lat, this.fields.lng);
-
-		// initialize marker
-		this.initMarker();
-		// initialize infowindow
-		this.initInfowindow();
-		//load infowindow async
-		this.asyncLoad(info_url);
-	},
-	setVisible: function(visible) {
-		this.visible = visible;
-	},
-	initMarker: function() {
-		this.marker = new google.maps.Marker({
-			position: new google.maps.LatLng(this.fields.lat, this.fields.lng), 
-			visible: false,
-			map: this.map.googlemap()
-		});
-		if(this.fields.icon) {
-			var icon = new google.maps.MarkerImage(this.fields.icon);
-			var shadow = this.fields.shadow ? new google.maps.MarkerImage(this.fields.shadow) : null;
-			this.marker.setIcon(icon);
-			if(shadow) {
-				this.marker.setShadow(shadow);
-			}
-		}
-	},
-	initInfowindow: function() {
-		var iw_opt = {
-			content: null,
-	 		disableAutoPan: false,
-	 		pixelOffset: new google.maps.Size(-160, 0),
-	 		closeBoxMargin: "10px 8px 2px 2px",
-	 		closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
-	 		infoBoxClearance: new google.maps.Size(1, 1),
-	 		isHidden: false,
-	 		pane: "floatPane",
-	 		enableEventPropagation: false
-		};
-		
-		this.infowindow = new InfoBox(iw_opt);		
-
-		google.maps.event.addListener(this.marker, 'click', function(id, e) {
-			this.openInfowindow();
-		}.bind(this));
-	},
-	setAsMapCenter: function() {
-		this.map.googlemap().setCenter(this.latlng);
-	},
-	openInfowindow: function() {
-		this.map.closeOpenedInfowindow();
-		this.infowindow.open(this.map.googlemap(), this.marker);
-		this.map.setOpenedInfowindow(this.infowindow);
-	},
-	update: function() {
-
-		var visible = true;
-
-		if(this.map.active_point_id && this.map.active_point_id != this.fields.id) {
-			visible = false;
-		}
-		else if(this.map.active_point_ctg && this.categories.indexOf(this.map.active_point_ctg) == -1) {
-			visible = false;
-		}
-		else if(this.map.active_polyline_id && this.polylines.indexOf(this.map.active_polyline_id) == -1) {
-			visible = false
-		}
-		else if(this.map.active_polyline_ctg) {
-			visible = false;
-			this.polylines.each(function(polyline_id) {
-				if(this.map.polylines['id' + polyline_id].categories.indexOf(this.map.active_polyline_ctg) != -1) {
-					visible = true;
-				}	
-			}.bind(this))
-		}
-		else if(this.map.active_polygon_id && this.polygons.indexOf(this.map.active_polygon_id) == -1) {
-			visible = false
-		}
-		else if(this.map.active_polygon_ctg) {
-			visible = false;
-			this.polygons.each(function(polygon_id) {
-				if(this.map.polygons['id' + polygon_id].categories.indexOf(this.map.active_polygon_ctg) != -1) {
-					visible = true;
-				}	
-			}.bind(this))
-		}
-
-		this.setVisible(visible);
-
-		if(this.visible) {
-			this.map.addMoocomplete(this.fields.label, 'point_' + this.fields.id);
-			this.map.cluster.addMarker(this.marker);
-			this.map.bounds.extend(this.latlng);
-		}
-		this.marker.setVisible(this.visible);
-
-	},
-	asyncLoad: function(url) {
-		var myRequest = new Request({
-    			url: url,
-    			method: 'get',
-    			onSuccess: function(responseText){
-				result = this.parseAnchors(responseText);
-				this.infowindow.setContent(result);
-    			}.bind(this),
-    			onFailure: function(){
-				throw new Error('Info window load error');
-    			}
-		}).send();
-	},
-	parseAnchors: function(text) {
-
-		var is_in_iframe = (window.location != window.parent.location) ? true : false;
-
-		if(!is_in_iframe) return text;
-	
-		var hidden = new Element('div').setStyle('display', 'none').inject(document.body);
-		hidden.set('html', text);
-
-		hidden.getElements('a').each(function(anchor) {
-
-			anchor.href = "javascript:parent.gmaps_chg_parent_url('" + anchor.href +"')";
-
-		});	
-
-		var new_text = hidden.get('html');
-
-		hidden.dispose();
-
-		return new_text;
-	
-	}
-
-});
-
-GmapPolyline = new Class({
-
-	Implements: [Options],
-	initialize: function(fields, categories, map, info_url) {
-		// db fields
-		this.fields = fields;
-		// map
-		this.map = map;
-		// visibility
-		this.visible = false;
-		// google map polyline
-		this.polyline = null;
-		// infowindow
-		this.infowindow = null;
-		// categories
-		this.categories = categories;
-
-		this.lats = this.fields.lat.split(',');
-		this.lngs = this.fields.lng.split(',');
-
-		// initialize polyline
-		this.initPolyline();
-		// initialize infowindow
-		this.initInfowindow();
-		//load infowindow async
-		this.asyncLoad(info_url);
-	},
-	setVisible: function(visible) {
-		this.visible = visible;
-	},
-	initPolyline: function() {
-
-		this.path = new google.maps.MVCArray();
-		for(var i = 0; i < this.lats.length; i++) {
-			this.path.push(new google.maps.LatLng(this.lats[i], this.lngs[i]));
-		}
-
-		this.polyline = new google.maps.Polyline({
-			path: this.path, 
-			strokeColor: this.fields.color,
-			strokeWeight: this.fields.width,
-			visible: false,
-			map: this.map.googlemap()
-		});
-
-		this.reference_marker = new google.maps.Marker({
-			position: this.path.getAt(0),
-			map: this.map.googlemap(),
-			visible: false
-		});
-	
-	},
-	initInfowindow: function() {
-		var iw_opt = {
-			content: null,
-	 		disableAutoPan: false,
-	 		pixelOffset: new google.maps.Size(-160, 0),
-	 		closeBoxMargin: "10px 8px 2px 2px",
-	 		closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
-	 		infoBoxClearance: new google.maps.Size(1, 1),
-	 		isHidden: false,
-	 		pane: "floatPane",
-	 		enableEventPropagation: false
-		};
-		
-		this.infowindow = new InfoBox(iw_opt);		
-
-		google.maps.event.addListener(this.polyline, 'click', function(id, e) {
-			this.openInfowindow();
-		}.bind(this));
-	},
-	openInfowindow: function() {
-		this.map.closeOpenedInfowindow();
-		this.infowindow.open(this.map.googlemap(), this.reference_marker);
-		this.map.setOpenedInfowindow(this.infowindow);
-	},
-	update: function() {
-
-		var visible = true;
-
-		if(this.map.active_point_id || this.map.active_point_ctg || this.map.active_polygon_id || this.map.active_polygon_ctg) {
-			visible = false;
-		}
-		if(this.map.active_polyline_id && this.map.active_polyline_id != this.fields.id) {
-			visible = false;
-		}
-		else if(this.map.active_polyline_ctg && this.categories.indexOf(this.map.active_polyline_ctg) == -1) {
-			visible = false;
-		}
-
-		this.setVisible(visible);
-
-		if(this.visible) {
-			this.map.addMoocomplete(this.fields.label, 'polyline_' + this.fields.id);
-			this.path.forEach(function(element, index) {
-				this.map.bounds.extend(element);
-			}.bind(this))
-		}
-		this.polyline.setVisible(this.visible);
-
-	},
-	asyncLoad: function(url) {
-		var myRequest = new Request({
-    			url: url,
-    			method: 'get',
-    			onSuccess: function(responseText){
-				var result = this.parseAnchors(responseText);
-				this.infowindow.setContent(result);
-    			}.bind(this),
-    			onFailure: function(){
-				throw new Error('Info window load error');
-    			}
-		}).send();
-	},
-	parseAnchors: function(text) {
-
-		var is_in_iframe = (window.location != window.parent.location) ? true : false;
-
-		if(!is_in_iframe) return text;
-	
-		var hidden = new Element('div').setStyle('display', 'none').inject(document.body);
-		hidden.set('html', text);
-
-		hidden.getElements('a').each(function(anchor) {
-			anchor.href = "javascript:parent.gmaps_chg_parent_url('" + anchor.href +"')";
-		});	
-
-		var new_text = hidden.get('html');
-
-		hidden.dispose();
-
-		return new_text;
-	
-	}
-});
-
-GmapPolygon = new Class({
-
-	Implements: [Options],
-	initialize: function(fields, categories, map, info_url) {
-		// db fields
-		this.fields = fields;
-		// map
-		this.map = map;
-		// visibility
-		this.visible = false;
-		// google map polyline
-		this.polygon = null;
-		// infowindow
-		this.infowindow = null;
-		// categories
-		this.categories = categories;
-
-		this.lats = this.fields.lat.split(',');
-		this.lngs = this.fields.lng.split(',');
-
-		// initialize polyline
-		this.initPolygon();
-		// initialize infowindow
-		this.initInfowindow();
-		//load infowindow async
-		this.asyncLoad(info_url);
-	},
-	setVisible: function(visible) {
-		this.visible = visible;
-	},
-	initPolygon: function() {
-
-		this.path = new google.maps.MVCArray();
-		for(var i = 0; i < this.lats.length; i++) {
-			this.path.push(new google.maps.LatLng(this.lats[i], this.lngs[i]));
-		}
-
-		this.polygon = new google.maps.Polygon({
-			path: this.path, 
-			fillColor: this.fields.color,
-			strokeColor: this.fields.color,
-			strokeWeight: this.fields.width,
-			visible: false,
-			map: this.map.googlemap()
-		});
-
-		this.reference_marker = new google.maps.Marker({
-			position: this.path.getAt(0),
-			map: this.map.googlemap(),
-			visible: false
-		});
-	
-	},
-	initInfowindow: function() {
-		var iw_opt = {
-			content: null,
-	 		disableAutoPan: false,
-	 		pixelOffset: new google.maps.Size(-160, 0),
-	 		closeBoxMargin: "10px 8px 2px 2px",
-	 		closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
-	 		infoBoxClearance: new google.maps.Size(1, 1),
-	 		isHidden: false,
-	 		pane: "floatPane",
-	 		enableEventPropagation: false
-		};
-		
-		this.infowindow = new InfoBox(iw_opt);		
-
-		google.maps.event.addListener(this.polygon, 'click', function(id, e) {
-			this.openInfowindow();
-		}.bind(this));
-	},
-	openInfowindow: function() {
-		this.map.closeOpenedInfowindow();
-		this.infowindow.open(this.map.googlemap(), this.reference_marker);
-		this.map.setOpenedInfowindow(this.infowindow);
-	},
-	update: function() {
-
-		var visible = true;
-
-		if(this.map.active_point_id || this.map.active_point_ctg || this.map.active_polyline_id || this.map.active_polyline_ctg) {
-			visible = false;
-		}
-		if(this.map.active_polygon_id && this.map.active_polygon_id != this.fields.id) {
-			visible = false;
-		}
-		else if(this.map.active_polygon_ctg && this.categories.indexOf(this.map.active_polygon_ctg) == -1) {
-			visible = false;
-		}
-
-		this.setVisible(visible);
-
-		if(this.visible) {
-			this.map.addMoocomplete(this.fields.label, 'polygon_' + this.fields.id);
-			this.path.forEach(function(element, index) {
-				this.map.bounds.extend(element);
-			}.bind(this))
-		}
-		this.polygon.setVisible(this.visible);
-
-	},
-	asyncLoad: function(url) {
-		var myRequest = new Request({
-    			url: url,
-    			method: 'get',
-    			onSuccess: function(responseText){
-					var result = this.parseAnchors(responseText);
-					this.infowindow.setContent(result);
-    			}.bind(this),
-    			onFailure: function(){
-					throw new Error('Info window load error');
-    			}
-		}).send();
-	},
-	parseAnchors: function(text) {
-
-		var is_in_iframe = (window.location != window.parent.location) ? true : false;
-
-		if(!is_in_iframe) return text;
-	
-		var hidden = new Element('div').setStyle('display', 'none').inject(document.body);
-		hidden.set('html', text);
-
-		hidden.getElements('a').each(function(anchor) {
-			anchor.href = "javascript:parent.gmaps_chg_parent_url('" + anchor.href +"')";
-		});	
-
-		var new_text = hidden.get('html');
-
-		hidden.dispose();
-
-		return new_text;
-	
-	}
-});
-
-Gmap = new Class({
-
-	Implements: [Options],
-	options: {
-		elements_list: false,
-		elements_voices: ['label'],
-		points_label: 'Punti di interesse',
-		polylines_label: 'Percorsi',
-		polygons_label: 'Aree',
-		empty_search_result: 'no items found'
-	},
-	initialize: function(canvas, options) {
-
-		this.canvas = canvas;
-		this.points = {};
-		this.cluster = null;
-		this.opened_infowindow = null;
-		this.polylines = {};
-		this.polygons = {};
-		this.active_point_ctg = null;
-		this.active_point_id = null;
-		this.active_polyline_ctg = null;
-		this.active_polyline_id = null;
-		this.active_polygon_ctg = null;
-		this.active_polygon_id = null;
-
-		// map bounds
-		this.bounds = null;
-
-		this.setProgressBar();
-		this.progress_bar.next(5, 'initializing environment');
-
-		this.progress_bar.next(12, 'setting options');
-		this.setOptions(options);
-		this.progress_bar.next(16, 'preparing auto complete search');
-		this.moocomplete_list = [];
-		this.moocomplete_list_id = [];
-		this.moocomplete = new MooComplete('text_search', {
-			list: this.moocomplete_list, 
-			mode: 'text',
-			size: 8
-		});
-
-		this.progress_bar.next(28, 'adding menu events');
-		this.addMenuEvents();	
-
-		this.progress_bar.next(50, 'initializing google map');
-		this.initMap();
-
-		this.progress_bar.next(55, 'setting map clusterer');
-		this.setCluster();
-		
-	},
-	setProgressBar: function() {
-
-		var canvas_coordinates = this.canvas.getCoordinates();
-		this.loading_layer = new Element('div', {'class': 'loading_layer'}).setStyles({
-			top: canvas_coordinates.top + 'px',
-			left: canvas_coordinates.left + 'px',
-			width: canvas_coordinates.width + 'px',
-			height: canvas_coordinates.height + 'px'
-		});
-		this.loading_layer.inject(document.body);
-
-		var self = this;
-		this.progress_bar = new progressBar({	
-			container: this.loading_layer,
-			speed: 500,
-			chain: true,
-			displayPercentage: true,
-			displayText: true,
-			onComplete: function() {
-				myeff = new Fx.Tween(self.loading_layer, {property: 'opacity'})
-				myeff.start(0.9, 0).chain(function() { self.loading_layer.dispose(); }); 
-			}
-		});
-
-	},
-	initMap: function() {
-
-		var map_opt = {
-			center: new google.maps.LatLng(45, 7),
-			zoom: 10,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.LARGE,
-				position: google.maps.ControlPosition.RIGHT_CENTER
-			},
-			panControl: false,
-			mapTypeControl: false
-		}
-
-		this.map = new google.maps.Map(this.canvas, map_opt);
-
-		var pano = this.map.getStreetView();
-		google.maps.event.addListener(pano, 'visible_changed', function() {
-			if(pano.getVisible()) {
-				$('gmaps_nav').setStyle('display', 'none');
-			}
-			else {
-				$('gmaps_nav').setStyle('display', 'block');
-			}
-		});
-	},
-	setCluster: function() {
-
-		this.cluster = new MarkerClusterer(this.map);
-		this.cluster.setGridSize(40);
-		
-	},
-	googlemap: function() {
-		return this.map;
-	},
-	addMenuEvents: function() {
-
-		$$('li[data-menu=maphelp]')[0].getParent('ul').setStyle('width', Math.round(this.canvas.getCoordinates().width*0.8) + 'px');
-
-		this.map_types = {
-			'hybrid': google.maps.MapTypeId.HYBRID,
-			'roadmap': google.maps.MapTypeId.ROADMAP,
-			'satellite': google.maps.MapTypeId.SATELLITE,
-			'terrain': google.maps.MapTypeId.TERRAIN
-		}
-
-		$('gmaps_nav').setStyle('width', this.canvas.getStyle('width'));
-		$('gmaps_nav').addEvent('click', function(e) {
-			if(e.target.getProperty('data-menu')=='maptype') {
-				$$('li[data-menu=maptype]').removeClass('selected');
-				e.target.addClass('selected');
-				this.map.setMapTypeId(this.map_types[e.target.getProperty('data-type')]);
-			}
-		}.bind(this));
-
-		$('button_search').addEvent('click', function() {
-			this.active_point_id = null;
-			this.active_polyline_id = null;
-			this.active_polygon_id = null;
-			var index = this.moocomplete_list.indexOf($('text_search').value);
-			if(index == -1) {
-				alert(this.options.empty_search_result);
-				return null;
-			}
-			var string_id = this.moocomplete_list_id[index];
-			if(string_id.test(/^point_/)) {
-				var id = string_id.substring(6).toInt();
-				this.active_point_id = id; 
-				this.updateMap();
-				//this.points['id' + id].setAsMapCenter();
-				this.points['id' + id].openInfowindow();
-			}
-			else if(string_id.test(/^polyline_/)) {
-				var id = string_id.substring(9).toInt();
-				this.active_polyline_id = id; 
-				this.updateMap();
-				this.polylines['id' + id].openInfowindow();
-			}
-			else if(string_id.test(/^polygon_/)) {
-				var id = string_id.substring(8).toInt();
-				this.active_polygon_id = id; 
-				this.updateMap();
-				this.polygons['id' + id].openInfowindow();
-			}
-
-		}.bind(this));
-
-		$('button_search_reset').addEvent('click', function() {
-			this.resetTextSearch();
-			this.updateMap();
-		}.bind(this));
-
-		$('ctg_search').addEvent('change', function(e) {
-			var value = $('ctg_search').get('value');
-			this.active_point_ctg = null;	
-			this.active_polyline_ctg = null;	
-			this.active_polygon_ctg = null;	
-			this.resetTextSearch();
-
-			if(value.test(/^point_/)) {
-				this.active_point_ctg = value.substring(6).toInt();	
-			}
-			else if(value.test(/^polyline_/)){
-				this.active_polyline_ctg = value.substring(9).toInt();	
-			}
-			else if(value.test(/^polygon_/)){
-				this.active_polygon_ctg = value.substring(8).toInt();	
-			}
-			this.updateMap();
-		}.bind(this));
-
-	},
-	resetTextSearch: function() {
-		$('text_search').value = '';
-		this.active_point_id = null;
-		this.active_polyline_id = null;
-		this.active_polygon_id = null;
-		if(this.opened_infowindow) {
-			this.opened_infowindow.close();
-		}
-	},
-	addPoints: function(points) {
-		Object.append(this.points, points);
-	}, 
-	removePoint: function(id) {
-		delete this.points['id' + id];
-	},
-	addPolylines: function(polylines) {
-		Object.append(this.polylines, polylines);
-	}, 
-	removePolyline: function(id) {
-		delete this.polylines['id' + id];
-	},
-	addPolygons: function(polygons) {
-		Object.append(this.polygons, polygons);
-	}, 
-	removePolygon: function(id) {
-		delete this.polygons['id' + id];
-	},
-	renderMap: function() {
-
-		this.progress_bar.next(58, 'updating map items');
-		this.progress_bar.next(65, 'adding points to cluster');
-        if(this.options.elements_list) {
-            this.renderList();
+var gmaps = {};
+gmaps.meta = {
+    version: '0.1'
+}
+
+
+/*
+ * Requires ProgressBar.js, markerclusterer_packed.js
+ */
+
+//use new maps rendering
+google.maps.visualRefresh = true
+
+// global object exporting oproperties and methods used by all other classes
+gmaps.Global = {
+    d_infowindow: null,
+    /**
+     * @summary Sets the current displayed infowindow
+     * @memberof gmaps.Global
+     * @param {maps.google.InfoWindow} [infowindow] the displayed infowindow
+     */
+    setDisplayedInfowindow: function(infowindow) {
+        this.d_infowindow = infowindow;
+    },
+    /**
+     * @summary Closes the current displayed infowindow
+     * @memberof gmaps.Global
+     */
+    closeDisplayedInfowindow: function() {
+        if(this.d_infowindow) {
+            this.d_infowindow.close();
+            this.d_infowindow = null;
         }
-        this.updateMap(); 
+    }
+}
 
-		this.progress_bar.next(98, 'ending...');
-		google.maps.event.addListenerOnce(this.map, 'idle', function(){
-			(function(){
-				this.progress_bar.next(100, 'complete');
-			}.bind(this)).delay(3000);
-		}.bind(this));
-	},
-	updateMap: function() {
+//primitive class for map's items
+gmaps.Item = new Class({
+    Implements: [Options, Events],
+    options: {
+    },
+    /**
+     * @summary Primitive map item class
+     * @classdesc This is a primitive class extended by all map item type classes. Provides methods usefull for every item type.
+     *                        Do not instantiate directly this class
+     * @constructs gmaps.Item
+     * @param {Object} [coords=undefined] The coordinates object
+     * @param {String} [coords.type=undefined] The shape type: point | area | polyline
+     * @param {Number|String} [coords.lat=undefined] The point latitude or the array of all polygon's vertex latitudes
+     * @param {Number|String} [coords.lng=undefined] The point longitude or the array of all polygon's vertex longitudes
+     * @param {Object} [style=undefined] Provides style information for the shape
+     * @param {String} [style.icon=undefined] The url of the icon to use as the point marker
+     * @param {String} [style.fill_color=undefined] The hex color to use to fill the polygon
+     * @param {Number} [style.fill_opacity=undefined] The decimal value for the polygon opacity
+     * @param {String} [style.stroke_color=undefined] The hex color to use to stroke the polygon / polyline
+     * @param {Number} [style.stroke_width=5] Stroke width polyline
+     * @param {Object} [options] Generic options
+     *
+     */
+    initialize: function(coords, style, fields, options) {
+        this.setOptions(options);
+        // fields used for infowindow content
+        this.fields = fields;
+        // prepare infowindow
+        this.setInfoWindow();
+        //set the shape (marker, polygon, polyline)
+        this.setShape(coords, style);
+    },
+    /**
+     * @summary Returns the item label
+     * @memberof gmaps.Item.prototype
+     * @return {String}
+     */
+    label: function() {
+        return this.fields.name;
+    },
+    /**
+     * @summary Returns the coordinates to put the shape in the center of the map
+     */
+    center: function() {
+        if(this.shape_type == 'point') {
+            return this.shape.getPosition();
+        }
+        else if(this.shape_type == 'area' || this.shape_type == 'polyline') {
+            return this.shape.getPath().getAt(0);
+        }
+    },
+    /**
+     * @summary Method used to set the infowindow and its content. Such method should be overridden by all subclasses.
+     * @abstract
+     * @memberof gmaps.Item.prototype
+     */
+    setInfoWindow: function() {
+        // override
+    },
+    /**
+     * @summary Creates the item shape (marker, polygon or polyline). Attaches the click event on a point to open its infowindow. Polygon's infowindows are
+     *                    managed through a click on map event handler
+     * @memberof gmaps.Item.prototype
+     */
+    setShape: function(coords, style) {
+        if(coords.type == 'point') {
+            this.shape_type = 'point';
+            this.shape = new google.maps.Marker({
+                position: new google.maps.LatLng(coords.lat, coords.lng)
+            })
+            // custom marker icon ?
+            if(style) {
+                this.shape.setIcon(style.icon);
+            }
+            //infowindow
+            var self = this;
+            google.maps.event.addListener(this.shape, 'click', function(evt) {
+                self.openInfoWindow();
+            })
+        }
+        else if(coords.type == 'area') {
+            this.shape_type = 'area';
+            var lats = coords.lat.split(',');
+            var lngs = coords.lng.split(',');
 
-		// empty moocomplete list
-		this.emptyMoocomplete();
+            var apath = [];
 
-		this.bounds = new google.maps.LatLngBounds(); 
+            for(var i = 0; i < lats.length; i++) {
+                var latlng = new google.maps.LatLng(lats[i], lngs[i]);
+                apath.push(latlng);
+            }
 
-		this.cluster.clearMarkers();
+            var path = new google.maps.MVCArray(apath);
 
-		Object.each(this.points, function(point_obj, key, object) {
-			point_obj.update();
-		}.bind(this))
+            this.shape = new google.maps.Polygon({
+                paths: path,
+                clickable: false,
+            });
+            //now a bit of custom style?
+            if(style) {
+                this.shape.setOptions({
+                    fillColor: style.fill_color,
+                    fillOpacity: style.fill_opacity.replace(',', '.'),
+                    strokeColor: style.stroke_color
+                })
+            }
+        }
+        else if(coords.type == 'polyline') {
+            this.shape_type = 'polyline';
+            var lats = coords.lat.split(',');
+            var lngs = coords.lng.split(',');
 
-		Object.each(this.polylines, function(polyline_obj, key, object) {
-			polyline_obj.update();
-		}.bind(this))
+            var apath = [];
 
-		Object.each(this.polygons, function(polygon_obj, key, object) {
-			polygon_obj.update();
-		}.bind(this))
+            for(var i = 0; i < lats.length; i++) {
+                var latlng = new google.maps.LatLng(lats[i], lngs[i]);
+                apath.push(latlng);
+            }
 
-		if(this.bounds.isEmpty()) {
-			alert(this.options.empty_search_result);
-		}
-		else {
-			this.map.fitBounds(this.bounds);
-			this.cluster.repaint();
-			if(this.active_point_id) {
-				this.map.setZoom(12);
-			}
-		}
+            var path = new google.maps.MVCArray(apath);
 
-        if(this.options.elements_list) {
-            this.updateList();
+            this.shape = new google.maps.Polyline({
+                path: path,
+                clickable: true,
+            });
+            //now a bit of custom style?
+            if(style) {
+                this.shape.setOptions({
+                    strokeColor: style.stroke_color,
+                    strokeWeight: style.stroke_width
+                });
+            }
+            else {
+                this.shape.setOptions({
+                    strokeWeight: 5
+                });
+            }
+            //infowindow
+            var self = this;
+            google.maps.event.addListener(this.shape, 'click', function(evt) {
+                self.openInfoWindow();
+            })
+        }
+        else {
+            throw new Error('item type {item_type} not supported'.substitute({item_type: coords.type}));
+        }
+    },
+    /**
+     * @summary Checks if the click over the map was inside the polygon
+     * @memberof gmaps.Item.prototype
+     * @param {google.maps.LatLng} [latlng] the LatLng clicked point
+     * @return {Boolean}
+     */
+    clicked: function(latlng) {
+        if(this.shape_type == 'area') {
+            return this.shape.containsLatLng(latlng);
+        }
+    },
+    /**
+     * @summary Opens the polygon infowindow in the clicked point
+     * @memberof gmaps.Item.prototype
+     * @param {google.maps.Event} [evt] the event object
+     */
+    openInfoWindow: function(evt) {
+        gmaps.Global.closeDisplayedInfowindow();
+        if(this.shape_type == 'point') {
+            this.infowindow.open(this.shape.getMap(), this.shape);
+        }
+        else if(this.shape_type == 'area') {
+            evt ? this.infowindow.setPosition(evt.latLng) : this.infowindow.setPosition(this.shape.getPath().getAt(0));
+            this.infowindow.open(this.shape.getMap());
+        }
+        else if(this.shape_type == 'polyline') {
+            evt ? this.infowindow.setPosition(evt.latLng) : this.infowindow.setPosition(this.shape.getPath().getAt(0));
+            this.infowindow.open(this.shape.getMap());
+        }
+        gmaps.Global.setDisplayedInfowindow(this.infowindow);
+    },
+    /**
+     * @summary Extends the map bounds to fit the shape point/s
+     * @memberof gmaps.Item.prototype
+     * @param {google.maps.LatLngBounds} [bounds] the LatLngBounds object
+     */
+    extendBounds: function(bounds) {
+        if(this.shape_type == 'point') {
+            bounds.extend(this.shape.getPosition());
+        }
+        else if(this.shape_type == 'area') {
+            this.shape.getPath().forEach(function(element, index) {
+                bounds.extend(element);
+            }.bind(this))
+        }
+        else if(this.shape_type == 'polyline') {
+            this.shape.getPath().forEach(function(element, index) {
+                bounds.extend(element);
+            }.bind(this))
+        }
+    }
+})
+
+// point items class
+gmaps.Point = new Class({
+    Extends: gmaps.Item,
+    options: {},
+    /**
+     * @summary Point item class
+     * @classdesc This class represents a map place. See the parent class for parameters explaination
+     * @constructs gmaps.Point
+     * @see gmaps.Item.initialize
+     */
+    initialize: function(coords, style, fields, options) {
+        coords.type = 'point';
+        this.parent(coords, style, fields, options);
+    },
+    /**
+     * @summary Sets the place infowindow
+     * @memberof gmaps.Point.prototype
+     */
+    setInfoWindow: function() {
+        this.infowindow = new google.maps.InfoWindow({
+            content: '<p><b><a href="{readall_url}">{name}</a></b></p>'.substitute({name: this.fields.name, readall_url: this.fields.read_all_url})
+        });
+    }
+})
+
+// path items class
+gmaps.Path = new Class({
+    Extends: gmaps.Item,
+    options: {},
+    /**
+     * @summary Step item class
+     * @classdesc This class represents a map path. See the parent class for params explaination
+     * @constructs gmaps.Path
+     * @see gmaps.Item.initialize
+     */
+    initialize: function(coords, style, fields, options) {
+        coords.type = 'polyline';
+        this.parent(coords, style, fields, options);
+    },
+    /**
+     * @summary Sets the place infowindow
+     * @memberof gmaps.Path.prototype
+     */
+    setInfoWindow: function() {
+        this.infowindow = new google.maps.InfoWindow({
+            content: '<p><b><a href="{readall_url}">{name}</a></b></p>'.substitute({name: this.fields.name, readall_url: this.fields.read_all_url})
+        });
+    }
+})
+
+// service item class
+gmaps.Area = new Class({
+    Extends: gmaps.Item,
+    options: {},
+    /**
+     * @summary Area item class
+     * @classdesc This class represents a map area. See the parent class for params explaination
+     * @constructs gmaps.Area
+     * @see gmaps.Item.initialize
+     */
+    initialize: function(coords, style, fields, options) {
+        coords.type = 'area';
+        this.parent(coords, style, fields, options);
+    },
+    /**
+     * @summary Sets the service infowindow
+     * @memberof gmaps.Service.prototype
+     */
+    setInfoWindow: function() {
+        this.infowindow = new google.maps.InfoWindow({
+            content: '<p><b><a href="{readall_url}">{name}</a></b></p>'.substitute({name: this.fields.name, readall_url: this.fields.read_all_url})
+        });
+    }
+})
+
+// map class
+gmaps.Map = new Class({
+
+    Implements: [Options, Events],
+    options: {
+        center: [45, 7],
+        zoom: 11,
+        filter_label: 'filtra',
+        filter_thematisms_label: 'tutti i tematismi',
+        show_progress_bar: true,
+        filter: true,
+        filter_thematisms: false, //categoria
+        panel: true
+    },
+    /**
+     * @summary Map class
+     * @classdesc This class represents the map. Provides methods to render it, update and manage the interface.
+     * @constructs gmaps.Map
+     * @params {Object} [options=undefined] The map options
+     * @params {Array} [options.center=Array(45, 7)] The map init center
+     * @params {Array} [options.zoom=11] The map init zoom level
+     * @params {String} [options.filter_label='filtra'] The filter label
+     * @params {Boolean} [options.show_progress_bar=true] Whether or not to show the progress bar when initializing the map
+     * @params {Boolean} [options.filter=true] Whether or not to show the group filter
+     * @params {Boolean} [options.filter_thematisms=true] Whether or not to show the thematisms filter
+     */
+    initialize: function(options) {
+        this.setOptions(options);
+        this.cluster = null;
+        this.groups = {};
+        this.selected_group = null;
+        this.selected_thematism = null;
+    },
+    setCenter: function(latlng) {
+        this.map.setCenter(latlng);
+    },
+    /**
+     * @summary Adds a group of items to the map. Items are instances of gmaps.Item subclasses
+     * @memberof gmaps.Map.prototype
+     * @params {String} [name] the name of the group used as a key
+     * @params {String} [label] the label of the group
+     * @params {Array} [items] the array of items
+     */
+    addGroup: function(name, label, items) {
+        this.groups[name] = {label: label, items: items};
+    },
+    /**
+     * @summary Adds items to a group. Items are instances of gmaps.Item subclasses
+     * @memberof gmaps.Map.prototype
+     * @params {String} [group_name] the name of the group
+     * @params {Array} [items] the array of items
+     */
+    addGroupItems: function(group_name, items) {
+        this.groups[group_name].items = this.groups[group_name].items.append(items);
+    },
+    /**
+     * @summary Renders the map in the given canvas
+     * @memberof gmaps.Map.prototype
+     * @params {String|Element} [canvas] the canvas id or the element itself
+     */
+    render: function(canvas) {
+        this.canvas = document.id(canvas);
+        this.canvas_container = new Element('div.maps-canvas_container')
+            .setStyles({position: 'relative', overflow: 'hidden'})
+            .inject(this.canvas, 'before').adopt(this.canvas);
+        this.initProgressBar();
+
+        this.progress_bar.next(5, 'initializing environment');
+
+        // create the panel
+        this.progress_bar.next(10, 'creating panel');
+        if(this.options.panel) {
+            this.setPanel();
         }
 
-	},	
-    renderList: function() {
+        var mapOptions = {
+            center: new google.maps.LatLng(this.options.center[0], this.options.center[1]),
+            zoom: this.options.zoom,
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
 
-        var map_coord = this.canvas.getCoordinates();
-        this.list_container = new Element('div', { style: 'width:' + map_coord.width + 'px' });
-        this.list_container.table = new Element('table', { 'class': 'generic' }).inject(this.list_container);
+        this.progress_bar.next(40, 'creating map...');
+
+        this.map = new google.maps.Map(this.canvas, mapOptions);
+
+        this.progress_bar.next(50, 'init cluster...');
+        this.setCluster();
+
+        this.progress_bar.next(60, 'adding items...');
+
+        this.updateItems();
+
+        this.progress_bar.next(98, 'ending...');
+
+        google.maps.event.addDomListener(this.map, 'click', this.clickHandler.bind(this), false);
+        var streetview = this.map.getStreetView();
+        var self = this;
+        google.maps.event.addListener(streetview, 'visible_changed', function() {
+                if(streetview.getVisible()) {
+                        var close_streetview_button = new Element('span#streetview-close').setStyles({
+                                position: 'absolute',
+                                bottom: '5px',
+                                left: '5px',
+                                'z-index': 1000,
+                                background: '#000',
+                                'text-align': 'center',
+                                'line-height': '16px',
+                                width: '18px',
+                                height: '18px',
+                                'border-radius': '50%',
+                                color: '#fff',
+                                'font-weight': 'bold',
+                                cursor: 'pointer'
+                        }).set('text', 'x').addEvent('click', function() { streetview.setVisible(false); });
+                        close_streetview_button.inject(self.canvas_container, 'bottom');
+                }
+                else {
+                        if(typeOf($('streetview-close')) == 'element') {
+                                $('streetview-close').dispose();
+                        }
+                }
+        });
+
+        google.maps.event.addListenerOnce(this.map, 'idle', function(){
+            (function(){
+                this.progress_bar.next(100, 'complete');
+            }.bind(this)).delay(3000);
+        }.bind(this));
+
+    },
+    /**
+     * @summary Initializes the progress bar
+     * @memberof gmaps.Map.prototype
+     */
+    initProgressBar: function() {
+
+        var canvas_coordinates = this.canvas.getCoordinates();
+        this.loading_layer = new Element('div', {'class': 'maps-loading_layer'}).setStyles({
+            top: canvas_coordinates.top + 'px',
+            left: canvas_coordinates.left + 'px',
+            width: canvas_coordinates.width + 'px',
+            height: canvas_coordinates.height + 'px',
+            display: this.options.show_progress_bar ? 'block' : 'none'
+        });
+        this.loading_layer.inject(document.body);
+
+        var self = this;
+        this.progress_bar = new progressBar({	
+            container: this.loading_layer,
+            speed: 500,
+            chain: true,
+            displayPercentage: true,
+            displayText: true,
+            onComplete: function() {
+                myeff = new Fx.Tween(self.loading_layer, {property: 'opacity'})
+                myeff.start(0.9, 0).chain(function() { self.loading_layer.dispose(); });
+            }
+        });
+
+    },
+    /**
+     * @summary Initializes the cluster
+     * @memberof gmaps.Map.prototype
+     */
+    setCluster: function() {
+        this.cluster = new MarkerClusterer(this.map);
+        this.cluster.setGridSize(40);
+    },
+    /**
+     * @summary Creates the map panel to filter/view points
+     * @memberof gmaps.Map.prototype
+     */
+    setPanel: function() {
+
+        this.panel = new gmaps.Panel(this, {
+            width: '250px', 
+            height: this.canvas.getStyle('height')
+        });
+
+        this.panel.inject(this.canvas_container, 'bottom');
+
+    },
+    updateMap: function() {
+
+        group = null;
+        thematism = null;
+
+        if(typeOf(document.id('filter_group')) != 'null') {
+            group = document.id('filter_group').value;
+        }
+
+        if(typeOf(document.id('filter_thematism')) != 'null') {
+            thematism = document.id('filter_thematism').value;
+        }
+
+        this.panel.emptyContent();
+        this.selected_group = group ? group : null;
+        this.selected_thematism = thematism ? thematism : null;
+        this.updateItems();
+    },
+    /**
+     * @summary Updates the items visualization over the map
+     * @memberof gmaps.Map.prototype
+     */
+    updateItems: function() {
+
+        var thematisms_filter = [];
+
+        this.bounds = new google.maps.LatLngBounds(); 
+        this.cluster.clearMarkers();
+
+        var self = this;
+        // group filter
+        if(self.options.filter) {
+            var select = new Element('select#filter_group').adopt(new Element('option[value=]').set('text', this.options.filter_label)).addEvent('change', function() {
+                self.updateMap();
+            });
+        }
+
+        Object.each(this.groups, function(group, key) {
+            if(self.options.filter) {
+                var option = new Element('option[value='+key+']').set('text', group.label);
+                self.panel.addFilter(select);
+            }
+            if(!self.selected_group || self.selected_group == key) {
+                if(self.options.panel) {
+                    self.panel.addList(key, group.label);
+                    if(self.options.filter && self.selected_group == key) {
+                        option.set('selected', 'selected');
+                    }
+                }
+            }
+            if(self.options.filter) {
+                option.inject(select);
+            }
+            group.items.each(function(item) {
+
+                if(self.options.filter_thematisms) {
+                    thematisms_filter.combine(item.fields.thematisms);
+                }
+
+                if(
+                    (!self.selected_group && !self.selected_thematism) ||
+                    (!self.selected_thematism && self.selected_group == key) ||
+                    (!self.selected_group && item.fields.thematisms.indexOf(self.selected_thematism) != -1) ||
+                    (self.selected_group == key && item.fields.thematisms.indexOf(self.selected_thematism) != -1)
+                ) {
+                    item.shape.setMap(self.map);
+                    if(item.shape_type == 'point') {
+                        self.cluster.addMarker(item.shape);
+                    }
+                    item.extendBounds(self.bounds);
+                    var li_item = new Element('span.link').set('text', '› ' + item.label()).addEvent('click', function() {
+                        self.map.setZoom(16);
+                        self.setCenter(item.center());
+                        item.openInfoWindow();
+                    });
+                    if(self.options.panel) {
+                        self.panel.addListItem(key, li_item);
+                    }
+                }
+                else {
+                    item.shape.setMap(null);
+                }
+            })
+        });
+
+        // thematism filter
+        if(this.options.filter_thematisms && thematisms_filter.length) {
+            thematisms_filter.sort();
+            var t_select = new Element('select#filter_thematism').adopt(new Element('option[value=]').set('text', this.options.filter_thematisms_label)).addEvent('change', function() {
+                self.updateMap();
+            });
+            thematisms_filter.each(function(t) {
+                var option = new Element('option[value='+ t +']').set('text', t).inject(t_select);
+                if(self.selected_thematism == t) option.setProperty('selected', 'selected');
+            })
+            this.panel.addFilter(t_select);
+        }
+
+        this.map.fitBounds(this.bounds);
+        var zoomChangeBoundsListener = google.maps.event.addListenerOnce(this.map, 'bounds_changed', function(event) {
+            if(self.map.getZoom() > 14) {
+                self.map.setZoom(14);
+            }
+            google.maps.event.removeListener(zoomChangeBoundsListener)
+        });
+
+        this.cluster.repaint();
+    },
+    /**
+     * @summary Event handler for the click event over the map. Used to open polygon's infowindows.
+     * @memberof gmaps.Map.prototype
+     * @param {google.maps.Event} [evt] the event object
+     */
+    clickHandler: function(evt) {
+        Object.each(this.groups, function(group, key) {
+            group.items.each(function(item) {
+                if(item.shape_type == 'area' && item.clicked(evt.latLng)) {
+                    item.openInfoWindow(evt);
+                }
+            })
+        })
+    }
+
+});
+
+//maps panel class
+gmaps.Panel = new Class({
+    Implements: [Options],
+    options: {
+        width: '200px',
+        height: '100%'
+    },
+    /**
+     * @summary Maps Panel Class
+     * @classdesc Represents the left side panel which lists all visible points with the possibility to filter them
+     * @constructs gmaps.Panel
+     * @param {Object} [options] some options
+     * @param {Number} [options.width] the panel width
+     * @param {Number} [options.height] the panel height
+     */
+    initialize: function(map, options) {
+        this.map = map;
+        this.setOptions(options);
+        this.panel_container = new Element('div.maps-panel').setStyles({
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            height: this.options.height,
+            width: this.options.width,
+            'z-index': 4,
+        });
+        this.panel_controllers = new Element('div.maps-panel_controllers').inject(this.panel_container);
+        this.panel_content = new Element('div.maps-panel_content').inject(this.panel_container);
+        this.panel_filters = new Element('div.maps-panel_filters').inject(this.panel_content);
+        this.panel_lists = new Element('div.maps-panel_lists').inject(this.panel_content);
+
+        this.panel_container.setStyle('overflow', 'auto');
+
+        this.is_open = true;
+        this.toggle_fx = new Fx.Tween(this.panel_container, {property: 'right'});
+        this.initControllers();
+
+        this.lists = {};
+
+        this.toggle();
+    },
+    /**
+     * @summary Initializes the panel controllers
+     * @memberof gmaps.Panel.prototype
+     */
+    initControllers: function() {
+        var fn = Browser.ie ? function() { setTimeout(this.toggle.bind(this), 500); }.bind(this) : this.toggle.bind(this);
+        this.controller = new Element('div.toggle.expanded')
+            .addEvent('click', fn)
+            .inject(this.panel_controllers);
+
+        var fn = function() {
+            this.map.canvas_container.toggleClass('fullscreen');
+            this.fullscreen_controller.toggleClass('expanded');
+            google.maps.event.trigger(this.map.map,'resize');
+        }.bind(this);
+        this.fullscreen_controller = new Element('div.ctrl-fullscreen')
+            .addEvent('click', fn)
+            .inject(this.panel_controllers);
+
+        if(!Browser.Platform.ios && !Browser.Platform.android) {
+            this.panel_container.addEvent('mouseover', function() {
+                if(!this.is_open) {
+                    this.toggle();
+                }
+            }.bind(this));
+        }
+    },
+    /**
+     * @summary Empties the panel contents
+     * @memberof gmaps.Panel.prototype
+     */
+    emptyContent: function() {
+        this.panel_filters.empty();
+        this.panel_lists.empty();
+    },
+    /**
+     * @summary Toggles the panel
+     * @memberof gmaps.Panel.prototype
+     */
+    toggle: function() {
+        var self = this;
+        if(this.is_open) {
+            if(typeof this.myscrollable != 'undefined') {
+                this.myscrollable.terminate();
+            }
+            this.panel_content.fade('out');
+            this.toggle_fx.start(-(this.options.width.toInt()-26)).chain(function() {
+                self.controller.removeClass('expanded').addClass('collapsed');
+                self.is_open = false;
+            });
+        }
+        else {
+            this.panel_content.fade('in');
+            this.toggle_fx.start(0).chain(function() {
+                self.controller.removeClass('collapsed').addClass('expanded');
+
+                self.panel_container.setStyle('overflow', 'auto');
+            });
+            this.is_open = true;
+        }
+    },
+    /**
+     * @summary Injects the panel in the given element at the given position
+     * @memberof gmaps.Panel.prototype
+     * @param {Element} [element] the element where the panel is inserted
+     * @param {String} [position] the position where the panel has to be inserted
+     */
+    inject: function(element, position) {
+        this.panel_container.inject(element, position);
+    },
+ /**
+     * @summary Adds a list to the panel
+     * @memberof gmaps.Panel.prototype
+     * @param {String} [name] the name of the list, used as a key
+     * @param {String} [label] the label of the list
+     */
+    addFilter: function(input) {
+        this.panel_filters.adopt(input);
+    },
+    /**
+     * @summary Adds a list to the panel
+     * @memberof gmaps.Panel.prototype
+     * @param {String} [name] the name of the list, used as a key
+     * @param {String} [label] the label of the list
+     */
+    addList: function(name, label) {
+        var list_title = new Element('h2').set('text', label);
+        var list = new Element('ul');
+        this.lists[name] = {title: list_title, list: list};
+        this.panel_lists.adopt(this.lists[name].title, this.lists[name].list);
+    },
+    /**
+     * @summary Adds items to a list
+     * @memberof ggmaps.Panel.prototype
+     * @param {String} [list_name] the name of the list
+     * @param {Array} [items] the items (Elements) to insert in li elements
+     */
+    addListItem: function(list_name, item) {
+        this.lists[list_name].list.adopt(new Element('li').adopt(item));
+    }
+})
+
+/**
+ * Starting from here some methods which extends the polygon prototype in order to check if a given google.maps.LatLng point 
+ * is contained in the polygon
+ */
+if (!google.maps.Polygon.prototype.getBounds) {
+    google.maps.Polygon.prototype.getBounds = function(latLng) {
+        var bounds = new google.maps.LatLngBounds();
+        var paths = this.getPaths();
+        var path;
         
-    },
-    updateList: function() {
-
-        this.list_container.table.empty();
-
-        var i = 0;                    
-        Object.each(this.points, function(point_obj, key, object) {
-            if(point_obj.visible) {
-                if(!i) {
-                    var tr = new Element('tr');
-                    var th = new Element('th', { colspan: this.options.elements_voices.length }).set('html', this.options.points_label).inject(tr);
-                    this.list_container.table.adopt(tr);
-                }
-                var tr = new Element('tr'); 
-                this.listRow(tr, point_obj);
-                i++;
+        for (var p = 0; p < paths.getLength(); p++) {
+            path = paths.getAt(p);
+            for (var i = 0; i < path.getLength(); i++) {
+                bounds.extend(path.getAt(i));
             }
-        }.bind(this))
-        
-        var i = 0;                    
-        Object.each(this.polylines, function(polyline_obj, key, object) {
-            if(polyline_obj.visible) {
-                if(!i) {
-                    var tr = new Element('tr');
-                    var th = new Element('th', { colspan: this.options.elements_voices.length }).set('html', this.options.polylines_label).inject(tr);
-                    this.list_container.table.adopt(tr);
-                }
-                var tr = new Element('tr');
-                this.listRow(tr, polyline_obj);
-                i++;
-            }
-        }.bind(this))
-
-		var i = 0;                    
-        Object.each(this.polygons, function(polygon_obj, key, object) {
-            if(polygon_obj.visible) {
-                if(!i) {
-                    var tr = new Element('tr');
-                    var th = new Element('th', { colspan: this.options.elements_voices.length }).set('html', this.options.polygons_label).inject(tr);
-                    this.list_container.table.adopt(tr);
-                }
-                var tr = new Element('tr');
-                this.listRow(tr, polygon_obj);
-                i++;
-            }
-        }.bind(this))
-
-        this.list_container.inject(this.canvas, 'after');
-
-    },
-    listRow: function(tr, obj) {
-
-        for(var i = 0; i < this.options.elements_voices.length; i++) {
-            field = this.options.elements_voices[i];
-            var td = new Element('td');
-            var voice = new Element('span').set('html', typeof obj.fields[field] != 'undefined' ? obj.fields[field] : '');
-            td.adopt(voice);
-            if(!i) {
-                voice.addClass('link').addEvent('click', function() {
-                   obj.openInfowindow(); 
-                }.bind(this));
-            }
-            tr.adopt(td);
         }
 
-        tr.inject(this.list_container.table);
-    },
-	emptyMoocomplete: function() {
-		this.moocomplete_list.empty();
-		this.moocomplete_list_id.empty();
-	},
-	addMoocomplete: function(label, id) {
-		this.moocomplete_list.push(label);
-		this.moocomplete_list_id.push(id);
-		// set new moocomplete list
-		this.moocomplete.setList(this.moocomplete_list);
-	},
-	setOpenedInfowindow: function(infowindow) {
-		this.opened_infowindow = infowindow;
-	},
-	closeOpenedInfowindow: function() {
-		if(this.opened_infowindow) {
-			this.opened_infowindow.close();
-		}
-	},
-	goToUrl: function() {
-		parent.gmaps_chg_parent_url(url);
-	}
+        return bounds;
+    }
+}
 
-});
+// Polygon containsLatLng - method to determine if a latLng is within a polygon
+google.maps.Polygon.prototype.containsLatLng = function(latLng) {
+    // Exclude points outside of bounds as there is no way they are in the poly
+    var bounds = this.getBounds();
+
+    if(bounds != null && !bounds.contains(latLng)) {
+        return false;
+    }
+
+    // Raycast point in polygon method
+    var inPoly = false;
+
+    var numPaths = this.getPaths().getLength();
+    for(var p = 0; p < numPaths; p++) {
+        var path = this.getPaths().getAt(p);
+        var numPoints = path.getLength();
+        var j = numPoints-1;
+
+        for(var i=0; i < numPoints; i++) {
+            var vertex1 = path.getAt(i);
+            var vertex2 = path.getAt(j);
+
+            if (vertex1.lng() < latLng.lng() && vertex2.lng() >= latLng.lng() || vertex2.lng() < latLng.lng() && vertex1.lng() >= latLng.lng()) {
+                if (vertex1.lat() + (latLng.lng() - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < latLng.lat()) {
+                    inPoly = !inPoly;
+                }
+            }
+
+            j = i;
+        }
+    }
+
+    return inPoly;
+}
