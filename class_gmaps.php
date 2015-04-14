@@ -170,6 +170,7 @@ class gmaps extends \Gino\Controller
     public static function outputFunctions()
     {
         $list = array(
+            "mapBox" => array("label"=>_("Mappa in blocco"), "permissions"=>array()),
             "map" => array("label"=>_("Mappa"), "permissions"=>array()),
             "point" => array("label"=>_("Dettaglio punto di interesse"), "permissions"=>array()),
             "path" => array("label"=>_("Dettaglio percorso"), "permissions"=>array()),
@@ -214,6 +215,37 @@ class gmaps extends \Gino\Controller
     }
 
     /**
+     * @brief Mappa interattiva per inserimento in blocco
+     * @description La mappa visualizzata è quella decisa da opzioni (_default_map_id)
+     *
+     * @return mappa, html
+     */
+    public function mapBox()
+    {
+
+        $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+        $this->_registry->addCustomJs($this->_class_www.'/gmaps.js', array('compress'=>false, 'minify'=>false));
+        $this->_registry->addJs($this->_class_www.'/ProgressBar.js');
+        $this->_registry->addJs($this->_class_www.'/markerclusterer_packed.js');
+
+        $this->_registry->addCss($this->_class_www.'/gmaps_'.$this->_instance_name.'.css');
+
+        $map = new Map($this->_default_map_id, $this);
+
+        if(!$map->id) {
+            throw new \Gino\Exception\Exception404();
+        }
+
+        $view = new View($this->_view_dir, 'map_'.$this->_instance_name);
+        $dict = array(
+            'map' => $map,
+        );
+
+        return $view->render($dict);
+    }
+
+
+    /**
      * @brief Mappa interattiva
      *
      * @param \Gino\Http\Request $request
@@ -222,10 +254,10 @@ class gmaps extends \Gino\Controller
     public function map(\Gino\Http\Request $request)
     {
 
-        $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+        $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+        $this->_registry->addCustomJs($this->_class_www.'/gmaps.js', array('compress'=>false, 'minify'=>false));
         $this->_registry->addJs($this->_class_www.'/ProgressBar.js');
         $this->_registry->addJs($this->_class_www.'/markerclusterer_packed.js');
-        $this->_registry->addJs($this->_class_www.'/gmaps.js');
 
         $this->_registry->addCss($this->_class_www.'/gmaps_'.$this->_instance_name.'.css');
 
@@ -259,7 +291,7 @@ class gmaps extends \Gino\Controller
     public function point(\Gino\Http\Request $request)
     {
 
-        $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+        $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
         $this->_registry->addJs($this->_class_www.'/moogallery.js');
         $this->_registry->addCss($this->_class_www.'/gmaps_'.$this->_instance_name.'.css');
         $this->_registry->addCss($this->_class_www.'/moogallery.css');
@@ -288,10 +320,10 @@ class gmaps extends \Gino\Controller
      */
     public function path(\Gino\Http\Request $request)
     {
-        $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+        $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+        $this->_registry->addCustomJs($this->_class_www.'/gmaps.js', array('compress'=>false, 'minify'=>false));
         $this->_registry->addJs($this->_class_www.'/ProgressBar.js');
         $this->_registry->addJs($this->_class_www.'/markerclusterer_packed.js');
-        $this->_registry->addJs($this->_class_www.'/gmaps.js');
 
         $this->_registry->addCss($this->_class_www.'/gmaps_'.$this->_instance_name.'.css');
 
@@ -320,10 +352,10 @@ class gmaps extends \Gino\Controller
      */
     public function area(\Gino\Http\Request $request)
     {
-        $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+        $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+        $this->_registry->addCustomJs($this->_class_www.'/gmaps.js', array('compress'=>false, 'minify'=>false));
         $this->_registry->addJs($this->_class_www.'/ProgressBar.js');
         $this->_registry->addJs($this->_class_www.'/markerclusterer_packed.js');
-        $this->_registry->addJs($this->_class_www.'/gmaps.js');
 
         $this->_registry->addCss($this->_class_www.'/gmaps_'.$this->_instance_name.'.css');
 
@@ -591,10 +623,10 @@ class gmaps extends \Gino\Controller
 
         $buffer = '';
         if($insert or $edit) {
-            $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+            $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+            $this->_registry->addCustomJs($this->_class_www.'/admin.js', array('compress'=>false, 'minify'=>false));
             $this->_registry->addJs($this->_class_www.'/moomapdrawer.js');
             $this->_registry->addCss($this->_class_www.'/moomapdrawer.css');
-            $this->_registry->addJs($this->_class_www.'/admin.js');
 
             $import_json = '';
             if($edit) {
@@ -670,10 +702,10 @@ class gmaps extends \Gino\Controller
 
         $buffer = '';
         if($insert or $edit) {
-            $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
+            $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+            $this->_registry->addCustomJs($this->_class_www.'/admin.js', array('compress'=>false, 'minify'=>false));
             $this->_registry->addJs($this->_class_www.'/moomapdrawer.js');
             $this->_registry->addCss($this->_class_www.'/moomapdrawer.css');
-            $this->_registry->addJs($this->_class_www.'/admin.js');
 
             $import_json = '';
             if($edit) {
@@ -742,8 +774,8 @@ class gmaps extends \Gino\Controller
 
         $buffer = '';
         if($insert or $edit) {
-            $this->_registry->addJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true");
-            $this->_registry->addJs($this->_class_www.'/admin.js');
+            $this->_registry->addCustomJs("http://maps.googleapis.com/maps/api/js?key=AIzaSyArAE-uBvCZTRaf_eaFn4umUdESmoUvoxM&sensor=true", array('compress'=>false, 'minify'=>false));
+            $this->_registry->addCustomJs($this->_class_www.'/admin.js', array('compress'=>false, 'minify'=>false));
 
             $import_json = '';
             if($edit) {

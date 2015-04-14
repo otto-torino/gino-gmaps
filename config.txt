@@ -1,1 +1,1 @@
-name:"gmaps",version:"0.1.0",tbl_name:"gmaps",instantiable:"1",description:"Gestore di mappe interattive di punti di interesse, percorsi ed aree",removable:"1",folders:"contents/gmaps"
+name:"gmaps",version:"0.1.0",tbl_name:"gmaps",instantiable:"1",description:"Gestore di mappe interattive contenenti punti di interesse percorsi ed aree",removable:"1",folders:"contents/gmaps"

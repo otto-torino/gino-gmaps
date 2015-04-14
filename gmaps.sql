@@ -4,7 +4,11 @@
 INSERT INTO `auth_permission` (`class`, `code`, `label`, `description`, `admin`) VALUES
 ('gmaps', 'can_admin', 'amministrazione', 'Amministrazione completa del modulo', 1);
 
-CREATE TABLE `gmaps_area` (
+--
+-- Table structure for table `gmaps_area`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_area` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -15,36 +19,56 @@ CREATE TABLE `gmaps_area` (
   `color` varchar(64) DEFAULT NULL,
   `width` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_area_category` (
+--
+-- Table structure for table `gmaps_area_category`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_area_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `area_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_area_point` (
+--
+-- Table structure for table `gmaps_area_point`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_area_point` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `area_id` int(11) NOT NULL,
   `point_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_category` (
+--
+-- Table structure for table `gmaps_category`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `slug` varchar(128) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_map` (
+--
+-- Table structure for table `gmaps_map`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -53,51 +77,81 @@ CREATE TABLE `gmaps_map` (
   `width` varchar(32) NOT NULL,
   `height` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_map_area` (
+--
+-- Table structure for table `gmaps_map_area`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_map_area` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `map_id` int(11) NOT NULL,
   `area_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_map_path` (
+--
+-- Table structure for table `gmaps_map_path`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_map_path` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `map_id` int(11) NOT NULL,
   `path_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_map_point` (
+--
+-- Table structure for table `gmaps_map_point`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_map_point` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `map_id` int(11) NOT NULL,
   `point_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_marker` (
+--
+-- Table structure for table `gmaps_marker`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_marker` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `icon` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_opt` (
+--
+-- Table structure for table `gmaps_opt`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_opt` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `default_map_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_path` (
+--
+-- Table structure for table `gmaps_path`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_path` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -108,26 +162,41 @@ CREATE TABLE `gmaps_path` (
   `color` varchar(64) DEFAULT NULL,
   `width` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_path_category` (
+--
+-- Table structure for table `gmaps_path_category`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_path_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `path_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_path_point` (
+--
+-- Table structure for table `gmaps_path_point`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_path_point` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `path_id` int(11) NOT NULL,
   `point_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point` (
+--
+-- Table structure for table `gmaps_point`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -144,10 +213,15 @@ CREATE TABLE `gmaps_point` (
   `email` varchar(128) DEFAULT NULL,
   `web` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point_attachment` (
+--
+-- Table structure for table `gmaps_point_attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point_attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `point_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -156,18 +230,28 @@ CREATE TABLE `gmaps_point_attachment` (
   `file` varchar(255) NOT NULL,
   `filesize` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point_category` (
+--
+-- Table structure for table `gmaps_point_category`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `point_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point_image` (
+--
+-- Table structure for table `gmaps_point_image`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `point_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -175,18 +259,28 @@ CREATE TABLE `gmaps_point_image` (
   `description` text,
   `file` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point_service` (
+--
+-- Table structure for table `gmaps_point_service`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `point_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_point_video` (
+--
+-- Table structure for table `gmaps_point_video`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_point_video` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `point_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -198,14 +292,19 @@ CREATE TABLE `gmaps_point_video` (
   `height` int(11) NOT NULL,
   `thumb` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE `gmaps_service` (
+--
+-- Table structure for table `gmaps_service`
+--
+
+CREATE TABLE IF NOT EXISTS `gmaps_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `icon` varchar(128) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
